@@ -107,11 +107,12 @@ def convertChapters(chapters):
         print("start:" + chap['start'])
         print(chap)
         command = [
-            "ffmpeg", '-i', chap['origfile'],
+            "ffmpeg",
+            '-ss', chap['start'],
+            '-i', chap['origfile'],
+            '-to', chap['end'],
             '-vcodec', 'copy',
             '-acodec', 'copy',
-            '-ss', chap['start'],
-            '-to', chap['end'],
             chap['outfile']]
         output = ""
         try:
@@ -120,7 +121,7 @@ def convertChapters(chapters):
             output = sp.check_output(command, stderr=sp.STDOUT, universal_newlines=True)
         except CalledProcessError as e:
             output = e.output
-            raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+            raise RuntimeError("command '{}' returned with error (code {}): {}".format(e.cmd, e.returncode, e.output))
 
 
 if __name__ == '__main__':
